@@ -13,25 +13,10 @@ for(let i=0; i<allDecrementButton.length; i++){
 for(let i=0; i<allIncrementButton.length; i++){
 
     allIncrementButton[i].addEventListener("click", function(event){
-    
-        let priceV = document.querySelectorAll(".price");
 
-        if(event.target.className.indexOf("increment")!= -1){
 
-            
-            event.target.previousElementSibling.value = parseFloat(event.target.previousElementSibling.value)+1;
-            priceV[i].innerText = priceValue[i]*event.target.previousElementSibling.value;
-        }
-        else if(event.target.className.indexOf("fa-plus")!=-1)
-        {
-            event.target.parentElement.previousElementSibling.value = parseFloat(event.target.parentElement.previousElementSibling.value)+1;
-            priceV[i].innerText = priceValue[i]*event.target.parentElement.previousElementSibling.value;
-            
-        }
+        total = updateUi(event, "previousElementSibling", ["increment", "fa-plus"], total, priceValue, i);
         
-        total += priceValue[i];
-        document.getElementById("sub").innerText = total;    
-        document.getElementById("total").innerText = total;
         
     })
 
@@ -45,29 +30,71 @@ for(let i=0; i<allIncrementButton.length; i++){
 for(let i=0; i<allDecrementButton.length; i++){
     allDecrementButton[i].addEventListener("click", function(event){
 
-
-        let priceV = document.querySelectorAll(".price");
+        total = updateUi(event, "nextElementSibling", ["decrement", "fa-minus"], total, priceValue, i);
         
-        if(event.target.className.indexOf("decrement")!= -1){
-
-            
-            event.target.nextElementSibling.value = parseFloat(event.target.nextElementSibling.value)-1;
-            priceV[i].innerText = priceValue[i]*event.target.nextElementSibling.value;
-            
-        }
-        else if(event.target.className.indexOf("fa-minus")!=-1)
-        {
-            
-            event.target.parentElement.nextElementSibling.value = parseFloat(event.target.parentElement.nextElementSibling.value)-1;
-            priceV[i].innerText = priceValue[i]*event.target.parentElement.nextElementSibling.value;
-            
-        } 
-
-        total -= priceValue[i];
-        document.getElementById("sub").innerText = total;    
-        document.getElementById("total").innerText = total;
 
     })
+}
+
+
+function updateUi(event, operation, nClass, total, priceValue, i){
+    
+
+    let priceV = document.querySelectorAll(".price");
+
+    if(event.target.className.indexOf(nClass[0])!= -1){
+
+        console.log(parseFloat(priceV[i].innerText)>0);
+
+        if(nClass[0]=="decrement" && parseFloat(priceV[i].innerText)>0)
+        {
+            event.target[operation].value = parseFloat(event.target[operation].value)-1;
+            priceV[i].innerText = priceValue[i]*event.target[operation].value;
+            total -= priceValue[i]; 
+        }    
+        else if(nClass[0]=="increment" && parseFloat(priceV[i].innerText)>=0)
+        {
+            event.target[operation].value = parseFloat(event.target[operation].value)+1;
+            priceV[i].innerText = priceValue[i]*event.target[operation].value;
+            total += priceValue[i]; 
+        }
+        
+        
+        
+        
+        
+    }
+    else if(event.target.className.indexOf(nClass[1])!=-1)
+    {
+        if(nClass[0]=="decrement" && parseFloat(priceV[i].innerText)>0)
+        {
+            event.target.parentElement[operation].value = parseFloat(event.target.parentElement[operation].value)-1;
+            priceV[i].innerText = priceValue[i]*event.target.parentElement[operation].value;
+            total -= priceValue[i]; 
+
+        }    
+        else if(nClass[0]=="increment" && parseFloat(priceV[i].innerText)>=0)
+        {
+            event.target.parentElement[operation].value = parseFloat(event.target.parentElement[operation].value)+1;
+            priceV[i].innerText = priceValue[i]*event.target.parentElement[operation].value;
+            total += priceValue[i]; 
+        }
+        
+        
+        
+        
+    } 
+
+    
+    
+    
+    document.getElementById("sub").innerText = total;    
+    document.getElementById("total").innerText = total;
+
+    
+
+    return total;
+
 }
 
 
